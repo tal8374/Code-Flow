@@ -1,8 +1,12 @@
-function ExpressionStatement(body, wrapper, lineNumber) {
-    this.body = body;
-    this.wrapper = wrapper;
-    this.lineNumber = lineNumber;
-    this.payload = { type: this.body.type, value: this.handlers[body.type] ? this.handlers[body.type].bind(this)() : null, lineNumber: this.lineNumber }
+class ExpressionStatement {
+
+    constructor(body, wrapper, lineNumber) {
+        this.body = body;
+        this.wrapper = wrapper;
+        this.lineNumber = lineNumber;
+        this.payload = { type: this.body.type, value: this.handlers[body.type] ? this.handlers[body.type].bind(this)() : null, lineNumber: this.lineNumber };
+    }
+
 }
 
 ExpressionStatement.prototype.handlers = {
@@ -119,6 +123,5 @@ function conditionalExpressionHandler() {
         new ExpressionStatement(this.body.consequent).payload.value + ' : ' +
         new ExpressionStatement(this.body.alternate).payload.value;
 }
-
 
 export { ExpressionStatement };

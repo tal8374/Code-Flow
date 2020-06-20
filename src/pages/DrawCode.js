@@ -26,7 +26,7 @@ const DrawCode = () => {
     return (
         <Container>
             <Grid>
-                <Button fluid onClick={handleRunCode}>Run Code</Button>
+                <Button fluid onClick={handleRunCode} style={{ marginTop: '4vh' }}>Run Code</Button>
                 <Grid.Column width={8} >
 
                     <CodeEditor

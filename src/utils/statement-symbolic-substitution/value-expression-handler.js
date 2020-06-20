@@ -1,11 +1,15 @@
 import { Expression } from './expression-handler';
 
-function ValueExpression(expression) {
-    this.expression = expression;
-}
+class ValueExpression {
 
-ValueExpression.prototype.getValue = function () {
-    return new Expression(this.expression).getExpression();
-};
+    constructor(expression) {
+        this.expression = expression;
+    }
+
+    getValue() {
+        return new Expression(this.expression).getExpression();
+    }
+
+}
 
 export { ValueExpression };
