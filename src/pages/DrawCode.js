@@ -9,27 +9,40 @@ import { SymbolicSubstitutionHandler } from '../utils/statement-symbolic-substit
 
 const DrawCode = () => {
 
+    // let a = 222;
+    // function func(b) {
+    //     if(false)
+    //       return 23232;
+    //     else if(false)
+    //         return 44444;
+    //     else if(false)
+    //         return 44444;
+    //     else
+    //         return 55555;
+    //     return b;
+    // }
+    // let c = func(3333);
+
     const [code, setCode] = useState(`
-    let a = 222;
-    function func(b) {
         if(false)
-          return 23232;
+            c = 23232;
         else if(false)
-            return 44444;
+            c = 44444;
+        else if(false)
+            c = 44444;
         else
-            return 55555;
-        return b;
-    }
-    let c = func(3333);
+            c = 55555;
     `);
     const [parsedCode, setParsedCode] = useState({});
     const [payloads, setPayloads] = useState([]);
 
     const handleRunCode = () => {
+        console.log(parseScript(code));
         setParsedCode(parseScript(code))
         // setPayloads(new BodyDeclaration(parseScript(code).body).payloads);
         let payloads = new BodyDeclaration(parseScript(code).body).payloads;
-        new SymbolicSubstitutionHandler(payloads).doSymbolicSubstitution()
+        // new SymbolicSubstitutionHandler(payloads).doSymbolicSubstitution()
+        console.log(payloads)
         setPayloads(payloads);
     }
 
