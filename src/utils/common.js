@@ -43,39 +43,34 @@ function updateLocalVariable(payload, localVariables, globalVariables, params, w
 }
 
 function getFunctionReturnValue(body) {
-    // console.log(body);
     for (let i = 0; i < body.length; i++) {
-        console.log(body[i].type);
-        console.log(body[i]);
-
-        if (body[i].type == 'ReturnStatement')
+        if (body[i].type == 'ReturnStatement') {
             return body[i].subsitutedValues
+        }
 
-        if(body[i].type == 'IfStatement') {
-            if(!!eval(body[i].test) == true) {
+        if (body[i].type == 'IfStatement') {
+            if (!!eval(body[i].test) == true) {
                 let value = getFunctionReturnValue(body[i].body);
                 if (value != 'ReturnStatement not found')
                     return value;
-            } 
-        }    
+            }
 
+            for (let j = 0; body[i].ifElses && j < body[i].ifElses.length; j++) {
+                if(!!eval(body[i].ifElses[j].test) == true) {
+                    let value = getFunctionReturnValue(body[i].ifElses[j].body);
+                    if (value != 'ReturnStatement not found')
+                        return value;
 
-        // else if (['IfStatement', 'ElseIfStatement'].indexOf(body[i].type) !== -1) {
-        //     if (!!eval(body[i].test) == true) {
-        //         let value = getFunctionReturnValue(body[i].body);
-        //         if (value != 'ReturnStatement not found')
-        //             return value;
-        //     } else if (body[i].elseIf && !!eval(body[i].elseIf.test) == true) {
-        //         let value = getFunctionReturnValue(body[i].elseIf.body);
-        //         if (value != 'ReturnStatement not found')
-        //             return value;
-        //     } else if (body[i].else) {
-        //         console.log('here')
-        //         let value = getFunctionReturnValue(body[i].else.body);
-        //         if (value != 'ReturnStatement not found')
-        //             return value;
-        //     }
-        // }
+                    break;
+                }
+            }
+
+            if(body[i].else) {
+                let value = getFunctionReturnValue(body[i].else.body);
+                if (value != 'ReturnStatement not found')
+                    return value;
+            }
+        }
     }
     return 'ReturnStatement not found';
 }

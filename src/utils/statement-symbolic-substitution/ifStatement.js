@@ -14,14 +14,24 @@ class IfStatement {
         this.initializeLocalVariables();
         this.testConditionSymbolicSubstitution();
         this.handleElseIf();
+        this.handleElse();
+    }
+
+    handleElse() {
+        if(!this.payload.else)
+            return;
+
+        for(let i = 0; i < this.payload.else.body.length; i++) {
+            let symbolicSubstitution = new SymbolicSubstitutionHandler([this.payload.else.body[i]], this);
+            symbolicSubstitution.doSymbolicSubstitution();
+        }
     }
 
     handleElseIf() {
-        if(!this.payload.elseIf)
-            return;
-
-        let symbolicSubstitution = new SymbolicSubstitutionHandler([this.payload.elseIf], this);
-        symbolicSubstitution.doSymbolicSubstitution();
+        for(let i = 0; i < this.payload.ifElses.length; i++) {
+            let symbolicSubstitution = new SymbolicSubstitutionHandler([this.payload.ifElses[i]], this);
+            symbolicSubstitution.doSymbolicSubstitution();
+        }
     }
 
     testConditionSymbolicSubstitution() {

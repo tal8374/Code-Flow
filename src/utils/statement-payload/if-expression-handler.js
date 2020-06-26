@@ -18,18 +18,18 @@ class IfExpression {
             this.payload.ifElses = [];
 
         if (body.alternate && body.alternate.type === 'IfStatement') {
+            let result = new BodyDeclaration([body.alternate], this, this.lineNumber).payloads[0];
+            let elseIfObject = {
+                type: 'ElseIfStatement',
+                lineNumber: this.lineNumber,
+                body: result.body,
+                test: result.test
+            };
+
             if (this.payload.ifElses != null) {
-                this.payload.ifElses.push({
-                    type: 'ElseIfStatement',
-                    lineNumber: this.lineNumber,
-                    body: new BodyDeclaration([body.alternate], this, this.lineNumber).payloads[0]
-                });
+                this.payload.ifElses.push(elseIfObject);
             } else {
-                this.setElseIfStatement({
-                    type: 'ElseIfStatement',
-                    lineNumber: this.lineNumber,
-                    body: new BodyDeclaration([body.alternate], this, this.lineNumber).payloads[0]
-                });
+                this.setElseIfStatement(elseIfObject);
             }
         }
 
@@ -41,6 +41,9 @@ class IfExpression {
                 body: new BodyDeclaration(body.alternate.body ? body.alternate.body : [body.alternate], this, this.lineNumber).payloads
             });
         }
+
+        if (this.payload.ifElses)
+            this.payload.ifElses = this.payload.ifElses.reverse();
     }
 
     setElseIfStatement(ElseIfStatement) {
