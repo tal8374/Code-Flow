@@ -19,8 +19,6 @@ class FunctionStatement {
         for (let i = 0; i < body.length; i++) {
             let type = body[i].type;
             let payload = body[i];
-            console.log(type)
-            console.log(this.handlers[type])
             if (this.handlers[type]) {
                 updateLocalVariable(payload, this.localVariables, this.getGlobalVariables(), this.getParams());
             }
@@ -29,7 +27,6 @@ class FunctionStatement {
                 symbolicSubstitution.doSymbolicSubstitution();
             }
         }
-        console.log(this.localVariables);
     }
 
     getWrapperParams() {

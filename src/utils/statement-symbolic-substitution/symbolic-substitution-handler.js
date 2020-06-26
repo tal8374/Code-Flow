@@ -22,6 +22,8 @@ class SymbolicSubstitutionHandler {
             if (!this.handlers[codeType])
                 continue;
 
+            console.log(codeType);
+
             let symbolicSubstitutionHandler = new this.handlers[codeType](this, payload);
             symbolicSubstitutionHandler.doSymbolicSubstitution();
         }
@@ -31,8 +33,6 @@ class SymbolicSubstitutionHandler {
         for (let i = 0; i < this.payload.length; i++) {
             if (!this.localVariablesHandlers[this.payload[i].type])
                 continue;
-            console.log(this.payload[i].type);
-
 
             updateLocalVariable(this.payload[i], this.localVariables, this.getGlobalVariables(), this.getParams());
         }
@@ -63,10 +63,8 @@ class SymbolicSubstitutionHandler {
 }
 
 SymbolicSubstitutionHandler.prototype.handlers = {
-    // 'VariableDeclaration': VariableStatement,
     'FunctionDeclaration': FunctionStatement,
     'WhileStatement': WhileStatement,
-    // 'AssignmentExpression': AssignmentStatement,
     'IfStatement': IfStatement,
     'ElseIfStatement': ElseIfStatement,
     'ReturnStatement': ReturnStatement,

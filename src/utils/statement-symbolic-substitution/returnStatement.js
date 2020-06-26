@@ -12,6 +12,7 @@ class ReturnStatement {
         this.initializeLocalVariables();
         this.payload.subsitutedValues = this.payload.argument;
         let globalVariables = this.getGlobalVariables();
+        console.log(globalVariables);
         for (let globalVariable in globalVariables) {
             this.payload.subsitutedValues = this.payload.subsitutedValues.replace(new RegExp(globalVariable, 'g'), globalVariables[globalVariable])
         }

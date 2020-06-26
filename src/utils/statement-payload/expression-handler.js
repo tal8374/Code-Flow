@@ -4,7 +4,22 @@ class ExpressionStatement {
         this.body = body;
         this.wrapper = wrapper;
         this.lineNumber = lineNumber;
-        this.payload = { type: this.body.type, value: this.handlers[body.type] ? this.handlers[body.type].bind(this)() : null, lineNumber: this.lineNumber };
+        if(body.type == 'ExpressionStatement') {
+            let data = this.handlers[body.type] ? this.handlers[body.type].bind(this)() : '';
+            this.payload = { 
+                type: this.body.type,
+                names: [data.split('=')[0]],
+                value: [data.split('=')[1]],
+                lineNumber: this.lineNumber 
+            };
+        } else {
+            this.payload = { 
+                type: this.body.type,
+                value: this.handlers[body.type] ? this.handlers[body.type].bind(this)() : null,
+                lineNumber: this.lineNumber 
+            };
+        }
+
     }
 
 }

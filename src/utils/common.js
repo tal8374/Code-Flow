@@ -5,7 +5,6 @@ function replaceAll(str, search, replacement) {
 }
 
 function updateLocalVariable(payload, localVariables, globalVariables, params) {
-    console.log(payload);
     if(!payload || !payload.values)
         return;
     payload.subsitutedValues = [...payload.values];

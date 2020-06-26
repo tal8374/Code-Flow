@@ -19,7 +19,14 @@ const DrawCode = () => {
     // let b = a + 2
 
     const [code, setCode] = useState(`
-    b = a + 3;
+    let a = 2;
+    let b = a + 3;
+    function func() {
+      return a + b + 1000;
+    }
+
+    let a = 1;
+    let b = a + 2
     `);
     const [parsedCode, setParsedCode] = useState({});
     const [payloads, setPayloads] = useState([]);

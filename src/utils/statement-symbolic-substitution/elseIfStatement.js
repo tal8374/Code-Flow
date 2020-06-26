@@ -7,7 +7,6 @@ class ElseIfStatement {
         this.wrapper = wrapper;
         this.payload = payload;
         this.localVariables = {};
-        console.log(this.payload);
     }
 
     doSymbolicSubstitution() {
