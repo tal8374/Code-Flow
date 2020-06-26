@@ -11,21 +11,16 @@ class AssignmentExpression {
     }
 
     init() {
-        if (this.expression.expressions) {
+        if (this.expression.expressions) 
             this.handleMultipleExpression();
-        }
-        else {
+        else 
             this.handleSingleExpression();
-        }
 
         this.increaseLineNumber();
-
-        return 'Success';
     }
 
     handleSingleExpression() {
         var expression = this.expression;
-
         this.assignmentExpressionHandler(expression);
     }
 

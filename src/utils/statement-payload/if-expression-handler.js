@@ -13,8 +13,6 @@ class IfExpression {
             test: new ExpressionStatement(body.test).payload.value,
             lineNumber: this.lineNumber,
             body: [],
-            elseIf: null,
-            else: null
         };
         this.payload.body = new BodyDeclaration(body.consequent.body ? body.consequent.body : [body.consequent], this, this.lineNumber).payloads;
 

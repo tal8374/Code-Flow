@@ -1,26 +1,35 @@
 import React, { useState } from 'react';
 
-import { Container, Grid, Form, TextArea, Button } from 'semantic-ui-react'
+import { Container, Grid, Form, Button } from 'semantic-ui-react'
 import { parseScript } from 'esprima';
-import Editor from 'react-simple-code-editor';
-import { highlight, languages } from 'prismjs/components/prism-core';
-import 'prismjs/components/prism-clike';
-import 'prismjs/components/prism-javascript';
 
 import CodeEditor from '../components/CodeEditor'
-
-import { BodyDeclaration } from '../utils/statement-symbolic-substitution/body-declaration-handler'
+import { BodyDeclaration } from '../utils/statement-payload/body-declaration-handler'
+import { SymbolicSubstitutionHandler } from '../utils/statement-symbolic-substitution/symbolic-substitution-handler'
 
 const DrawCode = () => {
 
-    const [code, setCode] = useState('');
+    // let a = 2;
+    // let b = a + 3;
+    // function a() {
+    //   return a + b + 1000;
+    // }
+
+    // let a = 1;
+    // let b = a + 2
+
+    const [code, setCode] = useState(`
+    b = a + 3;
+    `);
     const [parsedCode, setParsedCode] = useState({});
-    const [payloads, setPayloads] = useState({});
+    const [payloads, setPayloads] = useState([]);
 
     const handleRunCode = () => {
         setParsedCode(parseScript(code))
-
-        setPayloads(new BodyDeclaration(parseScript(code).body, null, 0).body);
+        // setPayloads(new BodyDeclaration(parseScript(code).body).payloads);
+        let payloads = new BodyDeclaration(parseScript(code).body).payloads;
+        new SymbolicSubstitutionHandler(payloads).doSymbolicSubstitution()
+        setPayloads(payloads);
     }
 
     return (
@@ -28,21 +37,10 @@ const DrawCode = () => {
             <Grid>
                 <Button fluid onClick={handleRunCode} style={{ marginTop: '4vh' }}>Run Code</Button>
                 <Grid.Column width={8} >
-
                     <CodeEditor
                         code={code}
                         setCode={setCode}
                     />
-
-
-                    {/* <Form>
-                        <TextArea
-                            placeholder='Tell us more'
-                            onChange={(event) => setCode(event.target.value)}
-                            value={code}
-                            style={{ minHeight: 300 }
-                            } />
-                    </Form> */}
                 </Grid.Column>
                 <Grid.Column width={8}>
                     <Form>
@@ -58,7 +56,6 @@ const DrawCode = () => {
                     </Form>
                 </Grid.Column>
             </Grid>
-
             <pre
                 style={{
                     width: '100%',

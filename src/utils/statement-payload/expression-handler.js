@@ -75,9 +75,14 @@ function literalHandler() {
 }
 
 function binaryExpressionHandler() {
-    return new ExpressionStatement(this.body.left).payload.value +
-        this.body.operator +
-        new ExpressionStatement(this.body.right).payload.value;
+    let leftSideValue = new ExpressionStatement(this.body.left).payload.value;
+    let rightSideValue = new ExpressionStatement(this.body.right).payload.value;
+    let operator = this.body.operator;
+
+    if(['/', '*'].indexOf(operator) == -1)
+        return `${leftSideValue} ${operator} ${rightSideValue}`;
+    else
+        return `(${leftSideValue}) ${operator} (${rightSideValue})`;
 }
 
 function identifierTestHandler() {

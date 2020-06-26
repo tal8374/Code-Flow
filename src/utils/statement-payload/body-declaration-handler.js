@@ -10,7 +10,7 @@ import { SwitchStatement } from './switchcase-handler';
 
 class BodyDeclaration {
 
-    constructor(body, wrapper, lineNumber) {
+    constructor(body, wrapper = null, lineNumber = 0) {
         this.body = body;
         this.lineNumber = lineNumber;
         this.wrapper = wrapper;
