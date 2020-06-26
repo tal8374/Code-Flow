@@ -8,6 +8,7 @@ class ExpressionStatement {
         if(this.body.expression && this.body.expression.type == 'CallExpression') {
             this.payload = {
                 type: 'CallExpression',
+                functionName: this.body.expression.callee.name,
                 arguments: this.body.expression.arguments.map(argument => this.handlers[argument.type] ? new ExpressionStatement(argument, this, lineNumber).payload.value : null),
                 lineNumber: this.lineNumber
             };
@@ -88,20 +89,7 @@ function CallExpressionHandler() {
 }
 
 function ExpressionStatementHandler() {
-    console.log('ExpressionStatementHandler');
-    console.log(this.body.expression);
-    console.log(new ExpressionStatement(this.body.expression).payload);
-    if (this.body.expression.type == 'CallExpression') {
-        return {
-            type: 'CallExpression',
-            // arguments: this.body.expression.arguments.map(argument => this.handlers[argument.type] ? new ExpressionStatement(argument, this, this.lineNumber).payload.value : null),
-            // value: this.handlers[body.type] ? this.handlers[body.type].bind(this)() : null,
-            lineNumber: this.lineNumber
-        };
-        // return new ExpressionStatement(this.body.expression).payload
-    } else {
-        return new ExpressionStatement(this.body.expression).payload.value;
-    }
+    return new ExpressionStatement(this.body.expression).payload.value;
 }
 
 function literalHandler() {
