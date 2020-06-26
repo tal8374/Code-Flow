@@ -4,27 +4,33 @@ class ExpressionStatement {
         this.body = body;
         this.wrapper = wrapper;
         this.lineNumber = lineNumber;
-        if(body.type == 'ExpressionStatement') {
+
+        if(this.body.expression && this.body.expression.type == 'CallExpression') {
+            this.payload = {
+                type: 'CallExpression',
+                arguments: this.body.expression.arguments.map(argument => this.handlers[argument.type] ? new ExpressionStatement(argument, this, lineNumber).payload.value : null),
+                lineNumber: this.lineNumber
+            };
+        } else if (body.type == 'ExpressionStatement') {
             let data = this.handlers[body.type] ? this.handlers[body.type].bind(this)() : '';
-            this.payload = { 
+            this.payload = {
                 type: this.body.type,
                 names: [data.split('=')[0]],
                 value: [data.split('=')[1]],
-                lineNumber: this.lineNumber 
+                lineNumber: this.lineNumber
             };
-        } else {
-            this.payload = { 
+            console.log();
+        }  else {
+            this.payload = {
                 type: this.body.type,
                 value: this.handlers[body.type] ? this.handlers[body.type].bind(this)() : null,
-                lineNumber: this.lineNumber 
+                lineNumber: this.lineNumber
             };
         }
-
     }
-
 }
 
-ExpressionStatement.prototype.handlers = {
+    ExpressionStatement.prototype.handlers = {
     'Literal': literalHandler,
     'BinaryExpression': binaryExpressionHandler,
     'Identifier': identifierTestHandler,
@@ -82,7 +88,20 @@ function CallExpressionHandler() {
 }
 
 function ExpressionStatementHandler() {
-    return new ExpressionStatement(this.body.expression).payload.value;
+    console.log('ExpressionStatementHandler');
+    console.log(this.body.expression);
+    console.log(new ExpressionStatement(this.body.expression).payload);
+    if (this.body.expression.type == 'CallExpression') {
+        return {
+            type: 'CallExpression',
+            // arguments: this.body.expression.arguments.map(argument => this.handlers[argument.type] ? new ExpressionStatement(argument, this, this.lineNumber).payload.value : null),
+            // value: this.handlers[body.type] ? this.handlers[body.type].bind(this)() : null,
+            lineNumber: this.lineNumber
+        };
+        // return new ExpressionStatement(this.body.expression).payload
+    } else {
+        return new ExpressionStatement(this.body.expression).payload.value;
+    }
 }
 
 function literalHandler() {
@@ -94,7 +113,7 @@ function binaryExpressionHandler() {
     let rightSideValue = new ExpressionStatement(this.body.right).payload.value;
     let operator = this.body.operator;
 
-    if(['/', '*'].indexOf(operator) == -1)
+    if (['/', '*'].indexOf(operator) == -1)
         return `${leftSideValue} ${operator} ${rightSideValue}`;
     else
         return `(${leftSideValue}) ${operator} (${rightSideValue})`;
