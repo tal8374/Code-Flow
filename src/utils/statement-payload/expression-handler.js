@@ -5,7 +5,14 @@ class ExpressionStatement {
         this.wrapper = wrapper;
         this.lineNumber = lineNumber;
 
-        if(this.body.expression && this.body.expression.type == 'CallExpression') {
+        if(this.body.type == 'CallExpression') {
+            this.payload = {
+                type: 'CallExpression',
+                functionName: this.body.callee.name,
+                arguments: this.body.arguments.map(argument => this.handlers[argument.type] ? new ExpressionStatement(argument, this, lineNumber).payload.value : null),
+                lineNumber: this.lineNumber
+            };
+        } else if(this.body.expression && this.body.expression.type == 'CallExpression') {
             this.payload = {
                 type: 'CallExpression',
                 functionName: this.body.expression.callee.name,
@@ -17,10 +24,9 @@ class ExpressionStatement {
             this.payload = {
                 type: this.body.type,
                 names: [data.split('=')[0]],
-                value: [data.split('=')[1]],
+                values: [data.split('=')[1]],
                 lineNumber: this.lineNumber
             };
-            console.log();
         }  else {
             this.payload = {
                 type: this.body.type,

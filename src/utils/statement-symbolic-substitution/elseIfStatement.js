@@ -28,7 +28,7 @@ class ElseIfStatement {
         let globalVariables = this.getGlobalVariables();
         this.payload.subsitutedValues = this.payload.test;
         for(let globalVariable in globalVariables) {
-            this.payload.subsitutedValues = this.payload.subsitutedValues.replace(new RegExp(globalVariable, 'g'), globalVariables[globalVariable])
+            this.payload.subsitutedValues = this.payload.subsitutedValues.toString().replace(new RegExp(globalVariable, 'g'), globalVariables[globalVariable])
         }
     }
 

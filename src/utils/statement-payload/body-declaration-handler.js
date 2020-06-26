@@ -23,6 +23,13 @@ class BodyDeclaration {
         }
     }
 
+    getFunction(functionName) {
+        let functionObj = this.payloads.find(payload => payload.type == 'FunctionDeclaration' && payload.name == functionName);
+        if(!functionObj && this.wrapper)
+            return this.wrapper.getFunction(functionName);
+        return functionObj;
+    }
+
     increaseLineNumber() {
         this.lineNumber += 1;
 

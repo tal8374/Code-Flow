@@ -9,24 +9,18 @@ import { SymbolicSubstitutionHandler } from '../utils/statement-symbolic-substit
 
 const DrawCode = () => {
 
-    // let a = 2;
-    // let b = a + 3;
-    // function a() {
-    //   return a + b + 1000;
-    // }
-
-    // let a = 1;
-    // let b = a + 2
-
-
-//     let a = 22;
-//     function func(a) {
-//     return 11;
-//   }
-
     const [code, setCode] = useState(`
-    
-      func(1, a);
+    let a = 222;
+    function func(b) {
+        if(false)
+          return 23232;
+        else if(false)
+            return 44444;
+        else
+            return 55555;
+        return b;
+    }
+    let c = func(3333);
     `);
     const [parsedCode, setParsedCode] = useState({});
     const [payloads, setPayloads] = useState([]);
@@ -35,7 +29,7 @@ const DrawCode = () => {
         setParsedCode(parseScript(code))
         // setPayloads(new BodyDeclaration(parseScript(code).body).payloads);
         let payloads = new BodyDeclaration(parseScript(code).body).payloads;
-        // new SymbolicSubstitutionHandler(payloads).doSymbolicSubstitution()
+        new SymbolicSubstitutionHandler(payloads).doSymbolicSubstitution()
         setPayloads(payloads);
     }
 

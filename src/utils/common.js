@@ -1,24 +1,65 @@
+import { FunctionStatement } from './statement-symbolic-substitution/functionStatement';
+
 function replaceAll(str, search, replacement) {
     str = '' + str;
 
     return str.split(search).join('' + replacement);
 }
 
-function updateLocalVariable(payload, localVariables, globalVariables, params) {
-    if(!payload || !payload.values)
+function updateLocalVariable(payload, localVariables, globalVariables, params, wrapper) {
+    if (!payload || !payload.values)
         return;
     payload.subsitutedValues = [...payload.values];
     for (let i = 0; i < payload.names.length; i++) {
         let variableName = payload.names[i];
         let variableContent = payload.values[i];
-
-        variableContent = doSymbolicSubstitutionTo(variableContent, variableName, localVariables, globalVariables, params);
-        localVariables[variableName] = getVariableContent(variableContent);
-        variableContent = getVariableContent(variableContent);
-        payload.subsitutedValues[i] = variableContent;
-
-        updateParamValue(params, variableName, variableContent);
+        if (typeof payload.values[i] == 'object') {
+            let functionObj = new FunctionStatement(wrapper, payload.values[i].function);
+            let params = payload.values[i].function.params;
+            for (let i = 0; i < params.length; i++) {
+                functionObj.payload.body.unshift({
+                    "type": "VariableDeclaration",
+                    "names": [
+                        params[i]
+                    ],
+                    "values": [
+                        localVariables[payload.values[i].arguments[i]] || payload.values[i].arguments[i]
+                    ],
+                    "lineNumber": 1
+                });
+            }
+            functionObj.doSymbolicSubstitution();
+            functionObj.payload.body = functionObj.payload.body.slice(params.length);
+            payload.subsitutedValues[i] = getFunctionReturnValue(functionObj.payload.body);
+            console.log('finalValue', payload.subsitutedValues[i])
+        } else {
+            variableContent = doSymbolicSubstitutionTo(variableContent, variableName, localVariables, globalVariables, params);
+            localVariables[variableName] = getVariableContent(variableContent);
+            variableContent = getVariableContent(variableContent);
+            payload.subsitutedValues[i] = variableContent;
+            updateParamValue(params, variableName, variableContent);
+        }
     }
+}
+
+function getFunctionReturnValue(body) {
+    console.log(body);
+    for (let i = 0; i < body.length; i++) {
+        if (body[i].type == 'ReturnStatement')
+            return body[i].subsitutedValues
+        else if (body[i].type == 'IfStatement') {
+            if (!!eval(body[i].test) == true) {
+                let value = getFunctionReturnValue(body[i].body);
+                if (value != 'ReturnStatement not found')
+                    return value;
+            } else if (body[i].elseIf && !!eval(body[i].elseIf.test) == true) {
+                let value = getFunctionReturnValue(body[i].elseIf.body);
+                if (value != 'ReturnStatement not found')
+                    return value;
+            }
+        }
+    }
+    return 'ReturnStatement not found';
 }
 
 function getVariableContent(variableContent) {

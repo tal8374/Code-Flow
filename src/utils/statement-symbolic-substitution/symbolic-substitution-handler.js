@@ -2,6 +2,7 @@ import {FunctionStatement} from './functionStatement';
 import {WhileStatement} from './whileStatement';
 import {ElseIfStatement} from './elseIfStatement';
 import {ReturnStatement} from './returnStatement';
+import {CallExpression} from './CallExpression';
 import {getGlobalVariables, updateLocalVariable} from '../common';
 import {IfStatement} from './ifStatement';
 
@@ -17,7 +18,7 @@ class SymbolicSubstitutionHandler {
         for (let i = 0; i < this.payload.length; i++) {
             let payload = this.payload[i];
             let codeType = payload.type;
-            updateLocalVariable(payload, this.localVariables, this.getGlobalVariables(), this.getParams());
+            updateLocalVariable(payload, this.localVariables, this.getGlobalVariables(), this.getParams(), this);
 
             if (!this.handlers[codeType])
                 continue;
@@ -52,11 +53,12 @@ class SymbolicSubstitutionHandler {
 }
 
 SymbolicSubstitutionHandler.prototype.handlers = {
-    'FunctionDeclaration': FunctionStatement,
+    // 'FunctionDeclaration': FunctionStatement,
     'WhileStatement': WhileStatement,
     'IfStatement': IfStatement,
     'ElseIfStatement': ElseIfStatement,
     'ReturnStatement': ReturnStatement,
+    'CallExpression': CallExpression,
 };
 
 SymbolicSubstitutionHandler.prototype.localVariablesHandlers = {
