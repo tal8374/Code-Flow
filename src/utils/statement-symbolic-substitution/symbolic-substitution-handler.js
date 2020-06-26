@@ -14,27 +14,16 @@ class SymbolicSubstitutionHandler {
     }
 
     doSymbolicSubstitution() {
-        this.initializeLocalVariables();
-
         for (let i = 0; i < this.payload.length; i++) {
             let payload = this.payload[i];
             let codeType = payload.type;
+            updateLocalVariable(payload, this.localVariables, this.getGlobalVariables(), this.getParams());
+
             if (!this.handlers[codeType])
                 continue;
 
-            console.log(codeType);
-
             let symbolicSubstitutionHandler = new this.handlers[codeType](this, payload);
             symbolicSubstitutionHandler.doSymbolicSubstitution();
-        }
-    }
-
-    initializeLocalVariables() {
-        for (let i = 0; i < this.payload.length; i++) {
-            if (!this.localVariablesHandlers[this.payload[i].type])
-                continue;
-
-            updateLocalVariable(this.payload[i], this.localVariables, this.getGlobalVariables(), this.getParams());
         }
     }
 
