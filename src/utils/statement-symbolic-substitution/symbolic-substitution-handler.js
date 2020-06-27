@@ -53,7 +53,6 @@ class SymbolicSubstitutionHandler {
 }
 
 SymbolicSubstitutionHandler.prototype.handlers = {
-    // 'FunctionDeclaration': FunctionStatement,
     'WhileStatement': WhileStatement,
     'IfStatement': IfStatement,
     'ElseIfStatement': ElseIfStatement,

@@ -6,34 +6,15 @@ import { parseScript } from 'esprima';
 import CodeEditor from '../components/CodeEditor'
 import { BodyDeclaration } from '../utils/statement-payload/body-declaration-handler'
 import { SymbolicSubstitutionHandler } from '../utils/statement-symbolic-substitution/symbolic-substitution-handler'
+import { ColorHandler } from '../utils/color-condition/color-handler'
 
 const DrawCode = () => {
 
-
-//     let a = 222;
-// function func(b) {
-//     if(false)
-//         return 23232;
-//     else if(true)
-//         return 44444;
-//     else if(false)
-//         return 44444;
-//     else
-//         return 55555;
-//     return b;
-// }
-// let c = func(3333);
-
-
     const [code, setCode] = useState(`
-    if(1)
-        c = 23232;
-    else if(2)
-        c = 44444;
-    else if(3)
-        c = 44444;
-    else
-        c = 55555;
+    let a = 2
+    while(a < 3) {
+        let c = 5;
+    }
     `);
     const [parsedCode, setParsedCode] = useState({});
     const [payloads, setPayloads] = useState([]);
@@ -44,6 +25,7 @@ const DrawCode = () => {
         let payloads = new BodyDeclaration(parseScript(code).body).payloads;
         // console.log(payloads)
         new SymbolicSubstitutionHandler(payloads).doSymbolicSubstitution()
+        new ColorHandler(payloads).colorCode()
         setPayloads(payloads);
         console.log(payloads)
     }
