@@ -4,19 +4,46 @@ import { Container, Grid, Form, Button } from 'semantic-ui-react'
 import { parseScript } from 'esprima';
 
 import CodeEditor from '../components/CodeEditor'
+import FlowChartGraph from '../components/FlowChartGraph'
 import { BodyDeclaration } from '../utils/statement-payload/body-declaration-handler'
 import { SymbolicSubstitutionHandler } from '../utils/statement-symbolic-substitution/symbolic-substitution-handler'
+import { FlowChartHandler } from '../utils/flow-chart/flow-chart-handler'
 import { ColorHandler } from '../utils/color-condition/color-handler'
 
 const DrawCode = () => {
 
+    // let x = 2;
+    // while(x < 3) {
+    //     let d = 2;
+    // }
+    
+    // if(1 < 2){
+    //     let a = 1;
+    // } else if (1 > 2) {
+    //     let b = 1;
+    // } else {
+    //     let c = 1;
+    // }
+
     const [code, setCode] = useState(`
-function func(a) {
-    let c = 2;  
-    return 3;  
+let a = 1;
+while(1 < 2) {
+    let c = 33;
+    let f = 44;
 }
 
-d = func(4);
+if(1 < 2){
+    let a = 1;
+    let a = 2;
+} else if (1 > 2) {
+    let b = 1;
+    let b = 3;
+} else {
+    let c = 1;
+    let c = 4;
+}
+
+let b = 2;
     `);
     const [parsedCode, setParsedCode] = useState({});
     const [payloads, setPayloads] = useState([]);
@@ -25,15 +52,18 @@ d = func(4);
         setParsedCode(parseScript(code))
         // setPayloads(new BodyDeclaration(parseScript(code).body).payloads);
         let payloads = new BodyDeclaration(parseScript(code).body).payloads;
-        // console.log(payloads)
         new SymbolicSubstitutionHandler(payloads).doSymbolicSubstitution()
         new ColorHandler(payloads).colorCode()
+        console.log(payloads);
+        let flowChartPayloads = new FlowChartHandler(payloads).createFlowChartObjects()
+        new FlowChartHandler(flowChartPayloads).connect()
+        console.log(flowChartPayloads);
         setPayloads(payloads);
-        console.log(payloads)
     }
 
     return (
         <Container>
+            {/* <FlowChartGraph/> */}
             <Grid>
                 <Button fluid onClick={handleRunCode} style={{ marginTop: '4vh' }}>Run Code</Button>
                 <Grid.Column width={8} >

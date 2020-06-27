@@ -7,7 +7,6 @@ class CallExpression {
         this.payload = payload;
         this.localVariables = {};
         this.function = this.wrapper.payload.find(data => data.type == 'FunctionDeclaration' && data.name == payload.functionName);
-        // console.log(this.function);
     }
 
     doSymbolicSubstitution() {

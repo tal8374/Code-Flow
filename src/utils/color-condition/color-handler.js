@@ -1,4 +1,3 @@
-import { FunctionStatement } from './functionStatement';
 import { WhileStatement } from './whileStatement';
 import { IfStatement } from './ifStatement';
 import { VariableStatement } from './variableStatement';
@@ -11,7 +10,6 @@ class ColorHandler {
     }
 
     colorCode() {
-        console.log(this.payloads)
         for (let i = 0; i < this.payloads.length; i++) {
             let codeType = this.payloads[i].type;
             this.payloads[i].hasReached = true;

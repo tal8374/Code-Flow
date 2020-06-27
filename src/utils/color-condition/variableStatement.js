@@ -16,8 +16,6 @@ class VariableStatement {
                 colorCreator.colorCode();
             }
         }
-
-        console.log(this.payload);
     }
 }
 

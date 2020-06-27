@@ -33,7 +33,6 @@ function updateLocalVariable(payload, localVariables, globalVariables, params, w
             payload.subsitutedValues[i] = getFunctionReturnValue(functionObj.payload.body);
             if (payload.subsitutedValues[i] == 'ReturnStatement not found')
                 payload.subsitutedValues[i] = undefined;
-            console.log('finalValue', payload.subsitutedValues[i])
         } else {
             variableContent = doSymbolicSubstitutionTo(variableContent, variableName, localVariables, globalVariables, params);
             localVariables[variableName] = getVariableContent(variableContent);

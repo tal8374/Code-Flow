@@ -22,12 +22,28 @@ class ExpressionStatement {
         } else if(this.body.expression && this.body.expression.type == 'AssignmentExpression') {
             this.payload = {
                 type: 'AssignmentExpression',
-                name: this.body.expression.left.name,
-                functionName: this.body.expression.right.callee.name,
-                function: wrapper.getFunction(this.body.expression.right.callee.name),
-                arguments: this.body.expression.right.arguments.map(argument => this.handlers[argument.type] ? new ExpressionStatement(argument, this, lineNumber).payload.value : null),
+                names: [this.body.expression.left.name],
                 lineNumber: this.lineNumber
             };
+
+            if(this.body.expression.right.callee) {
+                this.payload = {
+                    ...this.payload,
+                    values: [{
+                        type: 'CallExpression',
+                        lineNumber: this.lineNumber,
+                        functionName: this.body.expression.right.callee.name,
+                        function: wrapper.getFunction(this.body.expression.right.callee.name),
+                        arguments: this.body.expression.right.arguments.map(argument => this.handlers[argument.type] ? new ExpressionStatement(argument, this, lineNumber).payload.value : null),
+                    }],
+                }
+            } else {
+                this.payload = {
+                    ...this.payload,
+                    values: [body.expression.right.value],
+                }
+            }
+            console.log(this.payload);
         } else if (body.type == 'ExpressionStatement') {
             let data = this.handlers[body.type] ? this.handlers[body.type].bind(this)() : '';
             this.payload = {
