@@ -11,15 +11,29 @@ class WhileStatement {
     createFlowChartObjects() {
         return {
             objectType: this.payload.type,
-            type: 'whileCondition',
+            type: 'condition',
             id: uuidv4(),
             label: `${this.payload.test}`,
             body: new FlowChartHandler(this.payload.body).createFlowChartObjects()
         };
     }
 
-    connect(payloads, index, next) {
-        payloads[index].connection = {
+    connect(payloads, index, next = {}) {
+        let connections = [];
+        payloads[index].connections = {};
+        if (payloads[index].body.length > 0) {
+            payloads[index].connections.yes = {
+                id: payloads[index].body[0].id,
+                position: 'right',
+            }
+        } else {
+            payloads[index].connections.yes = {
+                id: next.id,
+                position: 'right',
+            }
+        }
+
+        payloads[index].connections.no = {
             id: next.id,
             position: 'bottom',
         }
@@ -27,16 +41,21 @@ class WhileStatement {
             if (i < payloads[index].body.length - 1) {
                 payloads[index].body[i].connection = {
                     id: payloads[index].body[i + 1].id,
-                    position: 'bottom',
+                    position: 'right',
                 }
             }
         }
-        if(payloads[index].body.length > 0) {
+        if (payloads[index].body.length > 0) {
             payloads[index].body[payloads[index].body.length - 1].connection = {
                 id: payloads[index].id,
-                position: 'bottom',
+                position: 'right',
             }
         }
+
+        connections.push(payloads[index]);
+        connections.push(...payloads[index].body);
+
+        return connections;
     }
 }
 

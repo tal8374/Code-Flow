@@ -10,7 +10,7 @@ class VariableStatement {
     createFlowChartObjects() {
         let obj = {
             objectType: this.payload.type,
-            type: 'crossSection',
+            type: 'operation',
             id: uuidv4(),
             label: [],
             state: 'highlighted',
@@ -27,11 +27,14 @@ class VariableStatement {
         return obj;
     }
 
-    connect(payloads, index, next) {
-        payloads[index].connection = {
-            id: next.id,
-            position: 'bottom',
+    connect(payloads, index) {
+        if (index < payloads.length - 1) {
+            payloads[index].connection = {
+                id: payloads[index + 1].id,
+                position: 'bottom',
+            }
         }
+        return payloads[index];
     }
 }
 

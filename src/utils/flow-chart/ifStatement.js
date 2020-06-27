@@ -38,69 +38,208 @@ class IfStatement {
         }
     }
 
-    connectElseStatement(ifStatement, next) {
-        for (let j = 0; j < ifStatement.else.body.length - 1; j++) {
-            ifStatement.else.body[j].connection = {
-                id: ifStatement.else.body[j + 1].id,
+    connectElseStatement(elseStatement, next) {
+        if (elseStatement == null)
+            return;
+
+        let toConnect = elseStatement.body.length > 0 ? elseStatement.body[0] : next;
+        elseStatement.connection = {
+            id: toConnect.id,
+            position: 'bottom',
+        }
+
+        for (let j = 0; j < elseStatement.body.length - 1; j++) {
+            elseStatement.body[j].connection = {
+                id: elseStatement.body[j + 1].id,
                 position: 'bottom',
             }
         }
 
-        ifStatement.else.body[ifStatement.else.body.length - 1].connection = {
+        toConnect = elseStatement.body.length > 0 ? elseStatement.body[elseStatement.body.length - 1] : elseStatement;
+        toConnect.connection = {
             id: next.id,
             position: 'bottom',
         }
     }
 
-    connectIfElseStatement(ifElses, next) { //TODO: connect last else if statement if else is not exists
+    connectIfElseStatement(ifElses, elseStatement, next) {
+        if (!ifElses || ifElses.length == 0)
+            return;
+
+        // if (ifElses.body.length > 0) {
+        //     ifElses.connection.yes = {
+        //         id: ifElses.body[0].id,
+        //         position: 'bottom',
+        //     }
+        // } else {
+        //     ifElses.connection.yes = {
+        //         id: next.id,
+        //         position: 'bottom',
+        //     }
+        // }
+
+        // if (elseStatement.length > 0) {
+        //     ifElses.connection.no = {
+        //         id: elseStatement[0].id,
+        //         position: 'right',
+        //     }
+        // } else if (elseStatement != null) {
+        //     ifElses.connection.no = {
+        //         id: elseStatement.id,
+        //         position: 'right',
+        //     }
+        // } else {
+        //     ifElses.connection.no = {
+        //         id: next.id,
+        //         position: 'right',
+        //     }
+        // }
+
         for (let i = 0; i < ifElses.length - 1; i++) {
-            if (ifElses[i].body.length == 0) {
-                ifElses[i].connection = {
-                    id: ifElses[i + 1].id,
+            ifElses[i].conncections = {};
+            if (ifElses.body.length > 0) {
+                ifElses[i].conncections.yes = {
+                    id: ifElses.body[0].id,
                     position: 'bottom',
                 }
             } else {
-                for (let j = 0; j < ifElses[i].body.length - 1; j++) {
-                    ifElses[i].body[j].connection = {
-                        id: ifElses[i].body[j + 1].id,
-                        position: 'bottom',
-                    }
-                }
-
-                ifElses[i].body[ifElses[i].body.length - 1].connection = {
-                    id: ifElses[i + 1].id,
+                ifElses[i].conncections.yes = {
+                    id: next.id,
                     position: 'bottom',
                 }
+            }
+
+            if (elseStatement.length > 0) {
+                ifElses[i].conncections.no = {
+                    id: elseStatement[0].id,
+                    position: 'right',
+                }
+            } else if (elseStatement != null) {
+                ifElses[i].conncections.no = {
+                    id: elseStatement.id,
+                    position: 'right',
+                }
+            } else {
+                ifElses[i].conncections.no = {
+                    id: next.id,
+                    position: 'right',
+                }
+            }
+
+            for (let j = 0; j < ifElses[i].body.length - 1; j++) {
+                ifElses[i].body[j].connection = {
+                    id: ifElses.body[j + 1].id,
+                    position: 'bottom',
+                }
+            }
+
+            let toConnect = ifElses[i].body.length > 0 ? ifElses[i].body[ifElses[i].body.length - 1] : ifElses[i];
+            toConnect.connection = {
+                id: next.id,
+                position: 'bottom',
             }
         }
-    }
 
-    connectIfStatement(ifStatement, ifElses, next) {
-        if (ifStatement.body.length > 0) { //point to the first in body
-            ifStatement.connection = {
-                id: ifStatement.body[0].id,
-                position: 'bottom',
-            }
-        } else if (ifElses.length > 0) { //point to the first if else 
-            ifStatement.connection = {
-                id: ifElses[0].id,
-                position: 'bottom',
-            }
-
-            if (ifStatement.else) {
-                let lastElseIf = ifElses[ifElses.length - 1];
-                lastElseIf.body[lastElseIf.body.length - 1].connection = {
-                    id: ifStatement.else.id,
-                    position: 'bottom',
-                }
-            }
-        } else if (ifStatement.else) { // point to else
-            ifStatement.connection = {
-                id: ifStatement.else.id,
+        ifElses[ifElses.length - 1].conncections = {};
+        if (ifElses[ifElses.length - 1].body.length > 0) {
+            ifElses[ifElses.length - 1].conncections.yes = {
+                id: ifElses[ifElses.length - 1].body[0].id,
                 position: 'bottom',
             }
         } else {
-            ifStatement.connection = {
+            ifElses[ifElses.length - 1].conncections.yes = {
+                id: next.id,
+                position: 'bottom',
+            }
+        }
+
+        if (elseStatement.length > 0) {
+            ifElses[ifElses.length - 1].conncections.no = {
+                id: elseStatement[0].id,
+                position: 'right',
+            }
+        } else if (elseStatement != null) {
+            ifElses[ifElses.length - 1].conncections.no = {
+                id: elseStatement.id,
+                position: 'right',
+            }
+        } else {
+            ifElses[ifElses.length - 1].conncections.no = {
+                id: next.id,
+                position: 'right',
+            }
+        }
+
+
+        // let toConnect = ifElses[ifElses.length - 1].body.length > 0 ?
+        //     ifElses[ifElses.length - 1].body[ifElses[ifElses.length - 1].body.length - 1] :
+        //     ifElses[ifElses.length - 1];
+
+        // if (ifElses != null) {
+        //     toConnect.connection = {
+        //         id: ifElses.id,
+        //         position: 'bottom',
+        //     }
+        // } else {
+        //     toConnect.connection = {
+        //         id: next.id,
+        //         position: 'bottom',
+        //     }
+        // }
+
+    }
+
+    connectIfStatement(ifStatement, ifElses, elseStatement, next) {
+        ifStatement.connections = {};
+        if (ifStatement.body.length > 0) {
+            ifStatement.connections.yes = {
+                id: ifStatement.body[0].id,
+                position: 'bottom',
+            }
+        } else {
+            ifStatement.connections.yes = {
+                id: next.id,
+                position: 'bottom',
+            }
+        }
+
+        if (ifElses && ifElses.length > 0) {
+            ifStatement.connections.no = {
+                id: ifElses[0].id,
+                position: 'right',
+            }
+        } else if (elseStatement != null) {
+            ifStatement.connections.no = {
+                id: elseStatement.id,
+                position: 'right',
+            }
+        } else {
+            ifStatement.connections.no = {
+                id: next.id,
+                position: 'right',
+            }
+        }
+
+        for (let j = 0; j < ifStatement.body.length - 1; j++) {
+            ifStatement.body[j].connection = {
+                id: ifStatement.body[j + 1].id,
+                position: 'bottom',
+            }
+        }
+
+        let toConnect = ifStatement.body.length > 0 ? ifStatement.body[ifStatement.body.length - 1] : ifStatement;
+        if (ifElses && ifElses.length > 0) {
+            toConnect.connection = {
+                id: ifElses.id,
+                position: 'bottom',
+            }
+        } else if (elseStatement != null) {
+            toConnect.connection = {
+                id: elseStatement.id,
+                position: 'bottom',
+            }
+        } else {
+            toConnect.connection = {
                 id: next.id,
                 position: 'bottom',
             }
@@ -110,30 +249,20 @@ class IfStatement {
     connect(payloads, index, next) {
         let ifStatement = payloads[index];
         let ifElses = ifStatement.ifElses;
+        let elseStatement = ifStatement.else;
 
-        for (let j = 0; j < ifStatement.body.length - 1; j++) {
-            ifStatement.body[j].connection = {
-                id: ifStatement.body[j + 1].id,
-                position: 'bottom',
-            }
+        this.connectIfStatement(ifStatement, ifElses, elseStatement, next);
+        this.connectIfElseStatement(ifElses, elseStatement, next);
+        this.connectElseStatement(elseStatement, next);
+
+        let connections = [ifStatement];
+        for (let i = 0; ifElses && i < ifElses.length; i++) {
+            connections.push(...ifElses[i].body);
         }
-        this.connectIfStatement(ifStatement, ifElses, next);
+        if (elseStatement)
+            connections.push(...elseStatement.body);
 
-        if (ifElses.length > 0) {
-            this.connectIfElseStatement(ifElses, next);
-        } else { //no elseIfs
-            if (ifStatement.else.body.length == 0) { //else body is empty
-                ifStatement.else.connection = {
-                    id: next.id,
-                    position: 'bottom',
-                }
-            }
-        }
-
-        if (ifStatement.else)
-            this.connectElseStatement(ifStatement, next);
-
-        console.log(ifStatement);
+        return connections;
     }
 }
 

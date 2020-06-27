@@ -43,7 +43,6 @@ class ExpressionStatement {
                     values: [body.expression.right.value],
                 }
             }
-            console.log(this.payload);
         } else if (body.type == 'ExpressionStatement') {
             let data = this.handlers[body.type] ? this.handlers[body.type].bind(this)() : '';
             this.payload = {

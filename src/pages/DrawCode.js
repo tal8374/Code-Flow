@@ -12,41 +12,34 @@ import { ColorHandler } from '../utils/color-condition/color-handler'
 
 const DrawCode = () => {
 
-    // let x = 2;
-    // while(x < 3) {
-    //     let d = 2;
+    // let a = 1;
+    // while(1 < 2) {
+    //     let c = 33;
+    //     let f = 44;
     // }
-    
+
     // if(1 < 2){
     //     let a = 1;
+    //     let a = 2;
     // } else if (1 > 2) {
     //     let b = 1;
+    //     let b = 3;
     // } else {
     //     let c = 1;
+    //     let c = 4;
     // }
 
+    // let b = 2;
+
     const [code, setCode] = useState(`
-let a = 1;
-while(1 < 2) {
-    let c = 33;
-    let f = 44;
-}
-
-if(1 < 2){
-    let a = 1;
-    let a = 2;
-} else if (1 > 2) {
-    let b = 1;
-    let b = 3;
-} else {
-    let c = 1;
-    let c = 4;
-}
-
-let b = 2;
+    if(1 < 2){
+        let a = 1;
+        let a = 2;
+    }
     `);
     const [parsedCode, setParsedCode] = useState({});
     const [payloads, setPayloads] = useState([]);
+    const [nodes, setNodes] = useState([]);
 
     const handleRunCode = () => {
         setParsedCode(parseScript(code))
@@ -54,16 +47,33 @@ let b = 2;
         let payloads = new BodyDeclaration(parseScript(code).body).payloads;
         new SymbolicSubstitutionHandler(payloads).doSymbolicSubstitution()
         new ColorHandler(payloads).colorCode()
-        console.log(payloads);
         let flowChartPayloads = new FlowChartHandler(payloads).createFlowChartObjects()
-        new FlowChartHandler(flowChartPayloads).connect()
+        let connections = new FlowChartHandler(flowChartPayloads).connect()
         console.log(flowChartPayloads);
+        console.log(connections);
+
+        let start = {
+            type: 'start',
+            id: 'my_start_node',
+            label: 'Start',
+            state: 'highlighted', // Support for flowstate (allows you to modify the styling of a node based on this value)
+            connection: {
+                id: 'my_condition_node',
+                position: 'bottom',
+            },
+        }
+        if (connections.length == 0)
+            return;
+
+        start.connection.id = connections[0].id;
+        connections = [start, ...connections]
+        setNodes(connections);
         setPayloads(payloads);
     }
 
     return (
         <Container>
-            {/* <FlowChartGraph/> */}
+            <FlowChartGraph nodes={nodes} />
             <Grid>
                 <Button fluid onClick={handleRunCode} style={{ marginTop: '4vh' }}>Run Code</Button>
                 <Grid.Column width={8} >

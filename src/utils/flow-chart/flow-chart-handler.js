@@ -24,10 +24,15 @@ class FlowChartHandler {
     }
 
     connect() {
-        console.log(this.payloads)
+        let connections = [];
         for(let i = 0; i < this.payloads.length; i++) {
-            new this.handlers[this.payloads[i].objectType](this.wrapper, this.payloads[i]).connect(this.payloads, i, this.payloads[i + 1] || {});
+            let connection = new this.handlers[this.payloads[i].objectType](this.wrapper, this.payloads[i]).connect(this.payloads, i, this.payloads[i + 1] || {});
+            if(Array.isArray(connection))
+                connections.push(...connection);
+            else
+                connections.push(connection);
         }
+        return connections;
     }
 
 }
