@@ -3,19 +3,15 @@ import { colorCondition } from '../common';
 
 class WhileStatement {
 
-    constructor(wrapper, payload, input, isMarked) {
+    constructor(wrapper, payload) {
         this.wrapper = wrapper;
         this.payload = payload;
-        this.input = input;
-        this.isMarked = isMarked;
     }
 
     colorCode() {
-        this.colorCondition();
-
-        let bodyCode = this.payload.body;
-
-        let colorCreator = new ColorHandler(bodyCode, this, this.input, this.isMarked);
+        if (!!eval(this.payload.subsitutedValues) == false)
+            return;
+        let colorCreator = new ColorHandler(this.payload.body, this);
         colorCreator.colorCode();
     }
 
@@ -29,7 +25,6 @@ class WhileStatement {
     colorCondition() {
         let condition = this.payload.declaration.condition;
         colorCondition(this.payload, this.getParams(), condition, this.input);
-        this.isMarked.isMarked = this.payload.style.backgroundColor === '#7FFF00';
     }
 
 }

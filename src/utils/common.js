@@ -31,6 +31,8 @@ function updateLocalVariable(payload, localVariables, globalVariables, params, w
             functionObj.doSymbolicSubstitution();
             functionObj.payload.body = functionObj.payload.body.slice(params.length);
             payload.subsitutedValues[i] = getFunctionReturnValue(functionObj.payload.body);
+            if (payload.subsitutedValues[i] == 'ReturnStatement not found')
+                payload.subsitutedValues[i] = undefined;
             console.log('finalValue', payload.subsitutedValues[i])
         } else {
             variableContent = doSymbolicSubstitutionTo(variableContent, variableName, localVariables, globalVariables, params);
@@ -56,7 +58,7 @@ function getFunctionReturnValue(body) {
             }
 
             for (let j = 0; body[i].ifElses && j < body[i].ifElses.length; j++) {
-                if(!!eval(body[i].ifElses[j].test) == true) {
+                if (!!eval(body[i].ifElses[j].test) == true) {
                     let value = getFunctionReturnValue(body[i].ifElses[j].body);
                     if (value != 'ReturnStatement not found')
                         return value;
@@ -65,7 +67,7 @@ function getFunctionReturnValue(body) {
                 }
             }
 
-            if(body[i].else) {
+            if (body[i].else) {
                 let value = getFunctionReturnValue(body[i].else.body);
                 if (value != 'ReturnStatement not found')
                     return value;

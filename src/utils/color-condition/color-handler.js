@@ -1,27 +1,25 @@
-import {FunctionStatement} from './functionStatement';
-import {WhileStatement} from './whileStatement';
-import {IfStatement} from './ifStatement';
+import { FunctionStatement } from './functionStatement';
+import { WhileStatement } from './whileStatement';
+import { IfStatement } from './ifStatement';
+import { VariableStatement } from './variableStatement';
 
 class ColorHandler {
 
-    constructor(payloads, wrapper, input, isMarked) {
+    constructor(payloads, wrapper) {
         this.payloads = payloads;
         this.wrapper = wrapper;
-        this.input = input;
-        this.isMarked = isMarked;
     }
 
     colorCode() {
+        console.log(this.payloads)
         for (let i = 0; i < this.payloads.length; i++) {
             let codeType = this.payloads[i].type;
+            this.payloads[i].hasReached = true;
 
             if (!this.handlers[codeType])
                 continue;
 
-            if (codeType === 'IfStatement') {
-                this.isMarked = {};
-            }
-            let codeHandler = new this.handlers[codeType](this.wrapper, this.payloads[i], this.input, this.isMarked);
+            let codeHandler = new this.handlers[codeType](this.wrapper, this.payloads[i]);
             codeHandler.colorCode();
         }
     }
@@ -29,9 +27,10 @@ class ColorHandler {
 }
 
 ColorHandler.prototype.handlers = {
-    'FunctionDeclaration': FunctionStatement,
     'WhileStatement': WhileStatement,
     'IfStatement': IfStatement,
+    'AssignmentExpression': VariableStatement,
+    'VariableDeclaration': VariableStatement,
 };
 
-export {ColorHandler};
+export { ColorHandler };

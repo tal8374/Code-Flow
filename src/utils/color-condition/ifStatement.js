@@ -3,38 +3,34 @@ import { ColorHandler } from './color-handler';
 
 class IfStatement {
 
-    constructor(wrapper, payload, input, isMarked) {
+    constructor(wrapper, payload) {
         this.wrapper = wrapper;
         this.payload = payload;
-        this.input = input;
-        this.isMarked = isMarked;
     }
 
     colorCode() {
-        this.colorCondition();
+        if (!!eval(this.payload.subsitutedValues) == true) {
+            let colorCreator = new ColorHandler(this.payload.body, this, this.input, this.isMarked);
+            colorCreator.colorCode();
+            return;
+        }
 
-        this.handleBody();
+
+        for (let i = 0; i < this.payload.ifElses.length; i++) {
+            this.payload.ifElses[i].hasReached = true;
+            if (!!eval(this.payload.ifElses[i].subsitutedValues) == true) {
+                let colorCreator = new ColorHandler(this.payload.ifElses[i].body, this, this.input, this.isMarked);
+                colorCreator.colorCode();
+                return;
+            }
+        }
+
+        if (this.payload.else) {
+            this.payload.else.hasReached = true;
+            let colorCreator = new ColorHandler(this.payload.else.body, this);
+            colorCreator.colorCode();
+        }
     }
-
-    colorCondition() {
-        let condition = this.payload.declaration.condition;
-        colorCondition(this.payload, this.getParams(), condition, this.input);
-        this.isMarked.isMarked = this.payload.style.backgroundColor === '#7FFF00';
-    }
-
-    handleBody() {
-        let bodyCode = this.payload.body;
-        let colorCreator = new ColorHandler(bodyCode, this, this.input, this.isMarked);
-        colorCreator.colorCode();
-    }
-
-    getParams() {
-        if (!this.wrapper || !this.wrapper.getParams)
-            return [];
-
-        return this.wrapper.getParams();
-    }
-
 }
 
 export { IfStatement };

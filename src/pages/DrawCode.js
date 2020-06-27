@@ -11,10 +11,12 @@ import { ColorHandler } from '../utils/color-condition/color-handler'
 const DrawCode = () => {
 
     const [code, setCode] = useState(`
-    let a = 2
-    while(a < 3) {
-        let c = 5;
-    }
+function func(a) {
+    let c = 2;  
+    return 3;  
+}
+
+d = func(4);
     `);
     const [parsedCode, setParsedCode] = useState({});
     const [payloads, setPayloads] = useState([]);

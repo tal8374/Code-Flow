@@ -12,11 +12,20 @@ class ExpressionStatement {
                 arguments: this.body.arguments.map(argument => this.handlers[argument.type] ? new ExpressionStatement(argument, this, lineNumber).payload.value : null),
                 lineNumber: this.lineNumber
             };
-        } else if(this.body.expression && this.body.expression.type == 'CallExpression') {
+        } else if(this.body.expression && this.body.expression.type == 'CallExpression' ) {
             this.payload = {
                 type: 'CallExpression',
                 functionName: this.body.expression.callee.name,
-                arguments: this.body.expression.arguments.map(argument => this.handlers[argument.type] ? new ExpressionStatement(argument, this, lineNumber).payload.value : null),
+                arguments: this.body.expressio.arguments.map(argument => this.handlers[argument.type] ? new ExpressionStatement(argument, this, lineNumber).payload.value : null),
+                lineNumber: this.lineNumber
+            };
+        } else if(this.body.expression && this.body.expression.type == 'AssignmentExpression') {
+            this.payload = {
+                type: 'AssignmentExpression',
+                name: this.body.expression.left.name,
+                functionName: this.body.expression.right.callee.name,
+                function: wrapper.getFunction(this.body.expression.right.callee.name),
+                arguments: this.body.expression.right.arguments.map(argument => this.handlers[argument.type] ? new ExpressionStatement(argument, this, lineNumber).payload.value : null),
                 lineNumber: this.lineNumber
             };
         } else if (body.type == 'ExpressionStatement') {
@@ -37,7 +46,7 @@ class ExpressionStatement {
     }
 }
 
-    ExpressionStatement.prototype.handlers = {
+ExpressionStatement.prototype.handlers = {
     'Literal': literalHandler,
     'BinaryExpression': binaryExpressionHandler,
     'Identifier': identifierTestHandler,
