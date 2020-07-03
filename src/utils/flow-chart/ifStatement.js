@@ -13,6 +13,8 @@ class IfStatement {
             return {
                 objectType: this.payload.type,
                 type: 'condition',
+                fill: 'lightyellow',
+                state: !!eval(this.payload.test) == true ? 'trueTest': 'falseTest',
                 id: uuidv4(),
                 ifElses: this.payload.ifElses.map(ifElse => new FlowChartHandler([ifElse]).createFlowChartObjects()).map(x => x[0]),
                 else: this.payload.else ? new FlowChartHandler([this.payload.else]).createFlowChartObjects()[0] : null,
@@ -23,6 +25,7 @@ class IfStatement {
             return {
                 objectType: this.payload.type,
                 type: 'condition',
+                state: !!eval(this.payload.test) == true ? 'trueTest': 'falseTest',
                 id: uuidv4(),
                 label: `${this.payload.test}`,
                 body: new FlowChartHandler(this.payload.body).createFlowChartObjects()
@@ -30,6 +33,7 @@ class IfStatement {
         } else {
             return {
                 objectType: this.payload.type,
+                state: this.payload.hasReached ? 'trueTest': 'falseTest',
                 type: 'condition',
                 id: uuidv4(),
                 label: `Else`,

@@ -13,7 +13,7 @@ class VariableStatement {
             type: 'operation',
             id: uuidv4(),
             label: [],
-            state: 'highlighted',
+            state: this.payload.hasReached ? 'hasReached': 'hasNotReached',
             connection: {
                 id: 'my_condition_node',
                 position: 'bottom',

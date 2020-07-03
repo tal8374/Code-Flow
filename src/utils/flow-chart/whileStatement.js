@@ -12,6 +12,7 @@ class WhileStatement {
         return {
             objectType: this.payload.type,
             type: 'condition',
+            state: this.payload.hasReached ? 'trueTest': 'falseTest',
             id: uuidv4(),
             label: `${this.payload.test}`,
             body: new FlowChartHandler(this.payload.body).createFlowChartObjects()

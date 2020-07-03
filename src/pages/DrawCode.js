@@ -32,7 +32,13 @@ const DrawCode = () => {
     // let b = 2;
 
     const [code, setCode] = useState(`
+
     let a1 = 2;
+    
+    while(a1 < 3){
+      a1 = 22;
+    }
+    
     if(1 < 2){
         let a2 = 1;
         let a3 = 1;
@@ -51,6 +57,7 @@ const DrawCode = () => {
     }
 
     let a10 = 3;
+    
     `);
     const [parsedCode, setParsedCode] = useState({});
     const [payloads, setPayloads] = useState([]);
@@ -82,6 +89,7 @@ const DrawCode = () => {
         connections = [start, ...connections]
         setNodes(connections);
         setPayloads(payloads);
+        console.log(payloads);
     }
 
     return (

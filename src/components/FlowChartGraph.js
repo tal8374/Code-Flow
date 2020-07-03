@@ -1,22 +1,22 @@
 import React from 'react';
 import { Flowchart, FlowchartConfig, Node } from 'react-flowchart.js';
 
-const FlowChartGraph = ({nodes}) => {
+const FlowChartGraph = ({ nodes }) => {
     // Nodes (required) - this is our list of nodes to display in the flowchart.
     // The properties "type", "id" and "label" are required. Connections are optional.
     // Note that the structure of connections vary based on the node type (eg. "condition" allows both "yes" and "no" connections).
     // Please see the flowchart.js README for documentation on this: https://github.com/adrai/flowchart.js#node-specific-specifiers-by-type
     // const nodes = [
-        // {
-        //     type: 'start',
-        //     id: 'my_start_node',
-        //     label: 'Start flow',
-        //     state: 'highlighted', // Support for flowstate (allows you to modify the styling of a node based on this value)
-        //     connection: {
-        //         id: 'my_condition_node',
-        //         position: 'bottom',
-        //     },
-        // },
+    // {
+    //     type: 'start',
+    //     id: 'my_start_node',
+    //     label: 'Start flow',
+    //     state: 'highlighted', // Support for flowstate (allows you to modify the styling of a node based on this value)
+    //     connection: {
+    //         id: 'my_condition_node',
+    //         position: 'bottom',
+    //     },
+    // },
     //     {
     //         type: 'condition',
     //         id: 'my_condition_node',
@@ -32,11 +32,11 @@ const FlowChartGraph = ({nodes}) => {
     //             },
     //         },
     //     },
-        // {
-        //     type: 'operation',
-        //     id: 'my_operation_node',
-        //     label: 'Foo operation',
-        // },
+    // {
+    //     type: 'operation',
+    //     id: 'my_operation_node',
+    //     label: 'Foo operation',
+    // },
     //     {
     //         type: 'inputoutput',
     //         id: 'dummy_node',
@@ -55,31 +55,43 @@ const FlowChartGraph = ({nodes}) => {
 
     // Config (optional) - here we configure the flowchart, eg. line width, font family, arrow type, yes and no texts, etc.
     const config = {
-        lineWidth: 3,
-        yesText: 'Yes!',
-        noText: 'No',
+        lineWidth: 1,
+        yesText: 'True',
+        noText: 'False',
     };
 
     // Styles (optional) - here we define the base styling for our nodes based on the node type (the "type" property)
     const styles = {
-        condition: {
-            fill: 'lightyellow',
-        },
-        operation: {
-            fill: 'lightblue',
-            'font-color': 'red',
-        },
-        inputoutput: {
-            fill: 'green',
-            'font-color': 'white',
-        },
+        // condition: {
+        //     fill: 'lightyellow',
+        // },
+        // operation: {
+        //     fill: 'lightblue',
+        //     'font-color': 'red',
+        // },
+        // inputoutput: {
+        //     fill: 'green',
+        //     'font-color': 'white',
+        // },
     };
 
     // States (optional) - here we define styling for the flowstate defined on nodes (the "state" property)
     const states = {
-        highlighted: {
-            fill: 'orange',
-            'font-color': 'blue',
+        hasReached: {
+            fill: 'green',
+            'font-color': 'white',
+        },
+        hasNotReached: {
+            fill: 'grey',
+            'font-color': 'white',
+        },
+        falseTest: {
+            fill: 'red',
+            'font-color': 'white',
+        },
+        trueTest: {
+            fill: 'green',
+            'font-color': 'white',
         },
     };
 
