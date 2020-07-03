@@ -35,11 +35,16 @@ class IfExpression {
 
         if (body.alternate && body.alternate.type !== 'IfStatement' && body.alternate.type !== 'ElseIfStatement') {
             this.increaseLineNumber();
-            this.wrapper.wrapper.setElseStatement({
+            let elsePayload = {
                 type: 'ElseStatement',
                 lineNumber: this.lineNumber,
                 body: new BodyDeclaration(body.alternate.body ? body.alternate.body : [body.alternate], this, this.lineNumber).payloads
-            });
+            }
+            if (this.wrapper.wrapper) {
+                this.wrapper.wrapper.setElseStatement(elsePayload);
+            } else {
+                this.payload.else = elsePayload;
+            }
         }
 
         if (this.payload.ifElses)
@@ -50,7 +55,7 @@ class IfExpression {
         if (this.wrapper && this.wrapper.wrapper && this.wrapper.wrapper.payload.ifElses)
             this.wrapper.wrapper.payload.ifElses.push(ElseIfStatement);
         else
-            this.wrapper.wrapper.setElseStatement(ElseIfStatement);
+            this.wrapper.wrapper.setElseIfStatement(ElseIfStatement);
     }
 
     setElseStatement(ElseStatement) {

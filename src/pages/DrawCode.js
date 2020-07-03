@@ -32,10 +32,25 @@ const DrawCode = () => {
     // let b = 2;
 
     const [code, setCode] = useState(`
+    let a1 = 2;
     if(1 < 2){
-        let a = 1;
-        let a = 2;
+        let a2 = 1;
+        let a3 = 1;
+    } else if(2 > 3) {
+        let a4 = 2;
+        let a5 = 2;
+    } else if(3 > 4) {
+        let a5 = 2;
+        let a6 = 2;
+    } else if(4 > 5) {
+        let a6 = 2;
+        let a7 = 2;
+    } else {
+        let a8 = 1;
+        let a9 = 1;
     }
+
+    let a10 = 3;
     `);
     const [parsedCode, setParsedCode] = useState({});
     const [payloads, setPayloads] = useState([]);
@@ -49,9 +64,7 @@ const DrawCode = () => {
         new ColorHandler(payloads).colorCode()
         let flowChartPayloads = new FlowChartHandler(payloads).createFlowChartObjects()
         let connections = new FlowChartHandler(flowChartPayloads).connect()
-        console.log(flowChartPayloads);
-        console.log(connections);
-
+        
         let start = {
             type: 'start',
             id: 'my_start_node',
@@ -63,8 +76,8 @@ const DrawCode = () => {
             },
         }
         if (connections.length == 0)
-            return;
-
+        return;
+        
         start.connection.id = connections[0].id;
         connections = [start, ...connections]
         setNodes(connections);
